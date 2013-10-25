@@ -216,6 +216,7 @@
     CGContextSetLineJoin(context, kCGLineJoinRound);
     CGContextSetLineWidth(context, LINE_WIDTH);
     CGContextSetLineCap(context, LINE_CAP);
+    CGContextSetAllowsAntialiasing(context, NO);
     
     CGContextSetRGBFillColor(context, 0, 0, 0, 1);
     
