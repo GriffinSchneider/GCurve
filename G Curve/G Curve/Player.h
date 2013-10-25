@@ -10,6 +10,8 @@
 
 @interface Player : NSObject
 
+@property (nonatomic) CGFloat turnArcAngle;
+
 @property (nonatomic) CGFloat angle;
 @property (nonatomic) CGPoint loc;
 
