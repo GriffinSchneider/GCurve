@@ -1,0 +1,470 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		85A9587C1819EC650051E3B7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A9587B1819EC650051E3B7 /* Foundation.framework */; };
+		85A9587E1819EC650051E3B7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A9587D1819EC650051E3B7 /* CoreGraphics.framework */; };
+		85A958801819EC650051E3B7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A9587F1819EC650051E3B7 /* UIKit.framework */; };
+		85A958861819EC650051E3B7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 85A958841819EC650051E3B7 /* InfoPlist.strings */; };
+		85A958881819EC650051E3B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A958871819EC650051E3B7 /* main.m */; };
+		85A9588C1819EC650051E3B7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A9588B1819EC650051E3B7 /* AppDelegate.m */; };
+		85A9588E1819EC650051E3B7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85A9588D1819EC650051E3B7 /* Images.xcassets */; };
+		85A958951819EC650051E3B7 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A958941819EC650051E3B7 /* XCTest.framework */; };
+		85A958961819EC650051E3B7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A9587B1819EC650051E3B7 /* Foundation.framework */; };
+		85A958971819EC650051E3B7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A9587F1819EC650051E3B7 /* UIKit.framework */; };
+		85A9589F1819EC650051E3B7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 85A9589D1819EC650051E3B7 /* InfoPlist.strings */; };
+		85A958A11819EC650051E3B7 /* G_CurveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A958A01819EC650051E3B7 /* G_CurveTests.m */; };
+		85A958AF1819ED390051E3B7 /* GameView.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A958AE1819ED390051E3B7 /* GameView.m */; };
+		85A958B21819EFC70051E3B7 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A958B11819EFC70051E3B7 /* Player.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		85A958981819EC650051E3B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85A958701819EC650051E3B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 85A958771819EC650051E3B7;
+			remoteInfo = "G Curve";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		85A958781819EC650051E3B7 /* G Curve.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "G Curve.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		85A9587B1819EC650051E3B7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		85A9587D1819EC650051E3B7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		85A9587F1819EC650051E3B7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		85A958831819EC650051E3B7 /* G Curve-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "G Curve-Info.plist"; sourceTree = "<group>"; };
+		85A958851819EC650051E3B7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		85A958871819EC650051E3B7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		85A958891819EC650051E3B7 /* G Curve-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "G Curve-Prefix.pch"; sourceTree = "<group>"; };
+		85A9588A1819EC650051E3B7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		85A9588B1819EC650051E3B7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		85A9588D1819EC650051E3B7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		85A958931819EC650051E3B7 /* G CurveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "G CurveTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		85A958941819EC650051E3B7 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		85A9589C1819EC650051E3B7 /* G CurveTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "G CurveTests-Info.plist"; sourceTree = "<group>"; };
+		85A9589E1819EC650051E3B7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		85A958A01819EC650051E3B7 /* G_CurveTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = G_CurveTests.m; sourceTree = "<group>"; };
+		85A958AD1819ED390051E3B7 /* GameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameView.h; path = "G Curve/GameView.h"; sourceTree = "<group>"; };
+		85A958AE1819ED390051E3B7 /* GameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GameView.m; path = "G Curve/GameView.m"; sourceTree = "<group>"; };
+		85A958B01819EFC70051E3B7 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = "G Curve/Player.h"; sourceTree = "<group>"; };
+		85A958B11819EFC70051E3B7 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Player.m; path = "G Curve/Player.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		85A958751819EC650051E3B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85A9587E1819EC650051E3B7 /* CoreGraphics.framework in Frameworks */,
+				85A958801819EC650051E3B7 /* UIKit.framework in Frameworks */,
+				85A9587C1819EC650051E3B7 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85A958901819EC650051E3B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85A958951819EC650051E3B7 /* XCTest.framework in Frameworks */,
+				85A958971819EC650051E3B7 /* UIKit.framework in Frameworks */,
+				85A958961819EC650051E3B7 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		85A9586F1819EC650051E3B7 = {
+			isa = PBXGroup;
+			children = (
+				85A958AD1819ED390051E3B7 /* GameView.h */,
+				85A958AE1819ED390051E3B7 /* GameView.m */,
+				85A958B01819EFC70051E3B7 /* Player.h */,
+				85A958B11819EFC70051E3B7 /* Player.m */,
+				85A958811819EC650051E3B7 /* G Curve */,
+				85A9589A1819EC650051E3B7 /* G CurveTests */,
+				85A9587A1819EC650051E3B7 /* Frameworks */,
+				85A958791819EC650051E3B7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		85A958791819EC650051E3B7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				85A958781819EC650051E3B7 /* G Curve.app */,
+				85A958931819EC650051E3B7 /* G CurveTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		85A9587A1819EC650051E3B7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				85A9587B1819EC650051E3B7 /* Foundation.framework */,
+				85A9587D1819EC650051E3B7 /* CoreGraphics.framework */,
+				85A9587F1819EC650051E3B7 /* UIKit.framework */,
+				85A958941819EC650051E3B7 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		85A958811819EC650051E3B7 /* G Curve */ = {
+			isa = PBXGroup;
+			children = (
+				85A9588A1819EC650051E3B7 /* AppDelegate.h */,
+				85A9588B1819EC650051E3B7 /* AppDelegate.m */,
+				85A9588D1819EC650051E3B7 /* Images.xcassets */,
+				85A958821819EC650051E3B7 /* Supporting Files */,
+			);
+			path = "G Curve";
+			sourceTree = "<group>";
+		};
+		85A958821819EC650051E3B7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				85A958831819EC650051E3B7 /* G Curve-Info.plist */,
+				85A958841819EC650051E3B7 /* InfoPlist.strings */,
+				85A958871819EC650051E3B7 /* main.m */,
+				85A958891819EC650051E3B7 /* G Curve-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		85A9589A1819EC650051E3B7 /* G CurveTests */ = {
+			isa = PBXGroup;
+			children = (
+				85A958A01819EC650051E3B7 /* G_CurveTests.m */,
+				85A9589B1819EC650051E3B7 /* Supporting Files */,
+			);
+			path = "G CurveTests";
+			sourceTree = "<group>";
+		};
+		85A9589B1819EC650051E3B7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				85A9589C1819EC650051E3B7 /* G CurveTests-Info.plist */,
+				85A9589D1819EC650051E3B7 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		85A958771819EC650051E3B7 /* G Curve */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85A958A41819EC650051E3B7 /* Build configuration list for PBXNativeTarget "G Curve" */;
+			buildPhases = (
+				85A958741819EC650051E3B7 /* Sources */,
+				85A958751819EC650051E3B7 /* Frameworks */,
+				85A958761819EC650051E3B7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "G Curve";
+			productName = "G Curve";
+			productReference = 85A958781819EC650051E3B7 /* G Curve.app */;
+			productType = "com.apple.product-type.application";
+		};
+		85A958921819EC650051E3B7 /* G CurveTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85A958A71819EC650051E3B7 /* Build configuration list for PBXNativeTarget "G CurveTests" */;
+			buildPhases = (
+				85A9588F1819EC650051E3B7 /* Sources */,
+				85A958901819EC650051E3B7 /* Frameworks */,
+				85A958911819EC650051E3B7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				85A958991819EC650051E3B7 /* PBXTargetDependency */,
+			);
+			name = "G CurveTests";
+			productName = "G CurveTests";
+			productReference = 85A958931819EC650051E3B7 /* G CurveTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		85A958701819EC650051E3B7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Griffin Schneider";
+				TargetAttributes = {
+					85A958921819EC650051E3B7 = {
+						TestTargetID = 85A958771819EC650051E3B7;
+					};
+				};
+			};
+			buildConfigurationList = 85A958731819EC650051E3B7 /* Build configuration list for PBXProject "G Curve" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 85A9586F1819EC650051E3B7;
+			productRefGroup = 85A958791819EC650051E3B7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				85A958771819EC650051E3B7 /* G Curve */,
+				85A958921819EC650051E3B7 /* G CurveTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		85A958761819EC650051E3B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85A958861819EC650051E3B7 /* InfoPlist.strings in Resources */,
+				85A9588E1819EC650051E3B7 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85A958911819EC650051E3B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85A9589F1819EC650051E3B7 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		85A958741819EC650051E3B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85A958B21819EFC70051E3B7 /* Player.m in Sources */,
+				85A958AF1819ED390051E3B7 /* GameView.m in Sources */,
+				85A9588C1819EC650051E3B7 /* AppDelegate.m in Sources */,
+				85A958881819EC650051E3B7 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85A9588F1819EC650051E3B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85A958A11819EC650051E3B7 /* G_CurveTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		85A958991819EC650051E3B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 85A958771819EC650051E3B7 /* G Curve */;
+			targetProxy = 85A958981819EC650051E3B7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		85A958841819EC650051E3B7 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				85A958851819EC650051E3B7 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		85A9589D1819EC650051E3B7 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				85A9589E1819EC650051E3B7 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		85A958A21819EC650051E3B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		85A958A31819EC650051E3B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		85A958A51819EC650051E3B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "G Curve/G Curve-Prefix.pch";
+				INFOPLIST_FILE = "G Curve/G Curve-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		85A958A61819EC650051E3B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "G Curve/G Curve-Prefix.pch";
+				INFOPLIST_FILE = "G Curve/G Curve-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		85A958A81819EC650051E3B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/G Curve.app/G Curve";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "G Curve/G Curve-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "G CurveTests/G CurveTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		85A958A91819EC650051E3B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/G Curve.app/G Curve";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "G Curve/G Curve-Prefix.pch";
+				INFOPLIST_FILE = "G CurveTests/G CurveTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		85A958731819EC650051E3B7 /* Build configuration list for PBXProject "G Curve" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85A958A21819EC650051E3B7 /* Debug */,
+				85A958A31819EC650051E3B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		85A958A41819EC650051E3B7 /* Build configuration list for PBXNativeTarget "G Curve" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85A958A51819EC650051E3B7 /* Debug */,
+				85A958A61819EC650051E3B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		85A958A71819EC650051E3B7 /* Build configuration list for PBXNativeTarget "G CurveTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85A958A81819EC650051E3B7 /* Debug */,
+				85A958A91819EC650051E3B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 85A958701819EC650051E3B7 /* Project object */;
+}
