@@ -27,8 +27,6 @@
 
 @property CADisplayLink *displayLink;
 
-@property (nonatomic) CGMutablePathRef path;
-@property (nonatomic) CGMutablePathRef savedPath;
 
 @property (nonatomic, retain) NSMutableArray *players;
 
@@ -39,15 +37,14 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.path = CGPathCreateMutable();
         self.players = [@[[Player new]] mutableCopy];
         
         [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
             player.loc = CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
-            CGPathMoveToPoint(self.path, NULL, player.loc.x, player.loc.y);
+            CGPathMoveToPoint(player.path, NULL, player.loc.x, player.loc.y);
+            player.savedPath = CGPathCreateMutableCopy(player.path);
         }];
         
-        self.savedPath = CGPathCreateMutableCopy(self.path);
         
         self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(update:)];
         [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop]
@@ -68,19 +65,20 @@
                                        player.loc.x - center.x);
             if (self.wasTurningLeftLastFrame) {
                 player.turnArcAngle += 0.1;
-                CGPathRelease(self.path);
-                self.path = CGPathCreateMutableCopy(self.savedPath);
+                CGPathRelease(player.path);
+                player.path = CGPathCreateMutableCopy(player.savedPath);
                 
                 [self checkCollision:CGPointMake(center.x + cos(startAngle - player.turnArcAngle-0.1)*RADIUS,
-                                                 center.y + sin(startAngle - player.turnArcAngle-0.1)*RADIUS)];
+                                                 center.y + sin(startAngle - player.turnArcAngle-0.1)*RADIUS)
+                          withPlayer:player];
             } else {
                 player.turnArcAngle = 0;
-                CGPathRelease(self.savedPath);
-                self.savedPath = CGPathCreateMutableCopy(self.path);
+                CGPathRelease(player.savedPath);
+                player.savedPath = CGPathCreateMutableCopy(player.path);
             }
             
             
-            CGPathAddArc(self.path, NULL,
+            CGPathAddArc(player.path, NULL,
                          center.x, center.y,
                          RADIUS,
                          startAngle, startAngle - player.turnArcAngle,
@@ -98,20 +96,21 @@
                                        player.loc.x - center.x);
             if (self.wasTurningRightLastFrame) {
                 player.turnArcAngle -= 0.1;
-                CGPathRelease(self.path);
-                self.path = CGPathCreateMutableCopy(self.savedPath);
+                CGPathRelease(player.path);
+                player.path = CGPathCreateMutableCopy(player.savedPath);
                 
                 [self checkCollision:CGPointMake(center.x + cos(startAngle - player.turnArcAngle+0.1)*RADIUS,
-                                                 center.y + sin(startAngle - player.turnArcAngle+0.1)*RADIUS)];
+                                                 center.y + sin(startAngle - player.turnArcAngle+0.1)*RADIUS)
+                 withPlayer:player];
                 
             } else {
                 player.turnArcAngle = 0;
-                CGPathRelease(self.savedPath);
-                self.savedPath = CGPathCreateMutableCopy(self.path);
+                CGPathRelease(player.savedPath);
+                player.savedPath = CGPathCreateMutableCopy(player.path);
             }
             
             
-            CGPathAddArc(self.path, NULL,
+            CGPathAddArc(player.path, NULL,
                          center.x, center.y,
                          RADIUS,
                          startAngle, startAngle - player.turnArcAngle,
@@ -125,11 +124,12 @@
             BOOL wasStraightLastFrame = !self.wasTurningLeftLastFrame && !self.wasTurningRightLastFrame;
             
             if (wasStraightLastFrame) {
-                CGPathRelease(self.path);
-                self.path = CGPathCreateMutableCopy(self.savedPath);
+                CGPathRelease(player.path);
+                player.path = CGPathCreateMutableCopy(player.savedPath);
                 
                 [self checkCollision:CGPointMake(player.loc.x + cos(player.angle)*VELOCITY,
-                                                 player.loc.y + sin(player.angle)*VELOCITY)];
+                                                 player.loc.y + sin(player.angle)*VELOCITY)
+                 withPlayer:player];
             } else {
                 if (self.wasTurningLeftLastFrame) {
                     CGPoint center = CGPointMake(player.loc.x + cos(player.angle-M_PI_2)*RADIUS,
@@ -139,7 +139,7 @@
                     player.loc = CGPointMake(center.x + cos(startAngle - player.turnArcAngle)*RADIUS,
                                              center.y + sin(startAngle - player.turnArcAngle)*RADIUS);
                     
-                    CGPathMoveToPoint(self.path, NULL, player.loc.x, player.loc.y);
+                    CGPathMoveToPoint(player.path, NULL, player.loc.x, player.loc.y);
                     
                     player.angle = (startAngle - player.turnArcAngle) - M_PI_2;
                 }
@@ -151,12 +151,12 @@
                     player.loc = CGPointMake(center.x + cos(startAngle - player.turnArcAngle)*RADIUS,
                                              center.y + sin(startAngle - player.turnArcAngle)*RADIUS);
                     
-                    CGPathMoveToPoint(self.path, NULL, player.loc.x, player.loc.y);
+                    CGPathMoveToPoint(player.path, NULL, player.loc.x, player.loc.y);
                     
                     player.angle = (startAngle - player.turnArcAngle) + M_PI_2;
                 }
-                CGPathRelease(self.savedPath);
-                self.savedPath = CGPathCreateMutableCopy(self.path);
+                CGPathRelease(player.savedPath);
+                player.savedPath = CGPathCreateMutableCopy(player.path);
             }
             
             
@@ -164,7 +164,7 @@
                                      player.loc.y + sin(player.angle)*VELOCITY);
             
 
-            CGPathAddLineToPoint(self.path, NULL, player.loc.x, player.loc.y);
+            CGPathAddLineToPoint(player.path, NULL, player.loc.x, player.loc.y);
             self.wasTurningLeftLastFrame = NO;
             self.wasTurningRightLastFrame = NO;
         }
@@ -174,8 +174,8 @@
     }];
 }
 
-- (void)checkCollision:(CGPoint)point {
-    CGPathRef thing = CGPathCreateCopyByStrokingPath(self.savedPath, NULL, LINE_WIDTH, LINE_CAP, kCGLineJoinRound, 0);
+- (void)checkCollision:(CGPoint)point withPlayer:(Player *)player {
+    CGPathRef thing = CGPathCreateCopyByStrokingPath(player.savedPath, NULL, LINE_WIDTH, LINE_CAP, kCGLineJoinRound, 0);
     if (CGPathContainsPoint(thing, NULL, point, NO)) {
         [self.displayLink invalidate];
     }
@@ -218,11 +218,11 @@
     CGContextSetLineCap(context, LINE_CAP);
     CGContextSetAllowsAntialiasing(context, NO);
     
-    CGContextSetRGBFillColor(context, 0, 0, 0, 1);
-    
-    CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
-    CGContextAddPath(context, self.path);
-    CGContextStrokePath(context);
+    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
+        CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+        CGContextAddPath(context, player.path);
+        CGContextStrokePath(context);
+    }];
 }
 
 @end

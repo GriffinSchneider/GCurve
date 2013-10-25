@@ -11,4 +11,11 @@
 @implementation Player
 
 
+- (id)init {
+    if ((self = [super init])) {
+        self.path = CGPathCreateMutable();
+    }
+    return self;
+}
+
 @end

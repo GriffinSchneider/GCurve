@@ -15,4 +15,7 @@
 @property (nonatomic) CGFloat angle;
 @property (nonatomic) CGPoint loc;
 
+@property (nonatomic) CGMutablePathRef path;
+@property (nonatomic) CGMutablePathRef savedPath;
+
 @end
