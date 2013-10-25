@@ -10,6 +10,11 @@
 
 @implementation Player
 
++ (id)newWithColor:(UIColor *)color {
+    Player *player = [Player new];
+    player.color = color;
+    return player;
+}
 
 - (id)init {
     if ((self = [super init])) {

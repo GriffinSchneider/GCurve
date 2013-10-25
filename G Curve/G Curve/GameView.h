@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Player.h"
 
 @interface GameView : UIView
+
+- (void)setTurnDirectionForPlayerAtIndex:(NSUInteger)index withDirection:(PlayerTurnDirection)direction;
 
 @end

@@ -17,6 +17,8 @@ typedef NS_ENUM(NSInteger, PlayerTurnDirection) {
 
 @interface Player : NSObject
 
+@property (nonatomic) BOOL dead;
+
 @property (nonatomic) CGFloat turnArcAngle;
 
 @property (nonatomic) CGFloat angle;
@@ -27,5 +29,9 @@ typedef NS_ENUM(NSInteger, PlayerTurnDirection) {
 
 @property (nonatomic) PlayerTurnDirection turnDirection;
 @property (nonatomic) PlayerTurnDirection turnDirectionLastFrame;
+
+@property (nonatomic, strong) UIColor *color;
+
++ (id)newWithColor:(UIColor *)color;
 
 @end

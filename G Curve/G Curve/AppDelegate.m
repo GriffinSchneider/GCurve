@@ -16,6 +16,8 @@
     self.window.rootViewController = [GameViewController new];
     [self.window makeKeyAndVisible];
     
+    srand([[NSDate date] timeIntervalSince1970]);
+    
     return YES;
 }
 

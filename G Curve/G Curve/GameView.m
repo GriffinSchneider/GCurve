@@ -7,10 +7,9 @@
 //
 
 #import "GameView.h"
-#import "Player.h"
 
-#define TURN_RADS_PER_FRAME 0.04
-#define VELOCITY 2.5
+#define VELOCITY 2.0
+#define TURN_VELOCITY 0.08
 
 #define RADIUS 30.0f
 
@@ -32,10 +31,10 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.players = [@[[Player new],
-                          [Player new],
-                          [Player new],
-                          [Player new]] mutableCopy];
+        self.players = [@[[Player newWithColor:[UIColor orangeColor]],
+                          [Player newWithColor:[UIColor blueColor]],
+                          [Player newWithColor:[UIColor brownColor]],
+                          [Player newWithColor:[UIColor greenColor]]] mutableCopy];
         
         [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
             
@@ -58,7 +57,13 @@
 }
 
 - (void)update:(CADisplayLink *)sender {
+    __block NSUInteger numDeadPlayers = 0;
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
+        
+        if (player.dead) {
+            numDeadPlayers++;
+            return;
+        }
         
         if (player.turnDirection == PlayerTurnDirectionLeft) {
             CGPoint center = CGPointMake(player.loc.x + cos(player.angle-M_PI_2)*RADIUS,
@@ -66,12 +71,12 @@
             CGFloat startAngle = atan2(player.loc.y - center.y,
                                        player.loc.x - center.x);
             if (player.turnDirectionLastFrame == PlayerTurnDirectionLeft) {
-                player.turnArcAngle += 0.1;
+                player.turnArcAngle += TURN_VELOCITY;
                 CGPathRelease(player.path);
                 player.path = CGPathCreateMutableCopy(player.savedPath);
                 
-                [self checkCollision:CGPointMake(center.x + cos(startAngle - player.turnArcAngle-0.1)*RADIUS,
-                                                 center.y + sin(startAngle - player.turnArcAngle-0.1)*RADIUS)
+                [self checkCollision:CGPointMake(center.x + cos(startAngle - player.turnArcAngle-TURN_VELOCITY)*RADIUS,
+                                                 center.y + sin(startAngle - player.turnArcAngle-TURN_VELOCITY)*RADIUS)
                           withPlayer:player];
             } else {
                 player.turnArcAngle = 0;
@@ -96,12 +101,12 @@
             CGFloat startAngle = atan2(player.loc.y - center.y,
                                        player.loc.x - center.x);
             if (player.turnDirectionLastFrame == PlayerTurnDirectionRight) {
-                player.turnArcAngle -= 0.1;
+                player.turnArcAngle -= TURN_VELOCITY;
                 CGPathRelease(player.path);
                 player.path = CGPathCreateMutableCopy(player.savedPath);
                 
-                [self checkCollision:CGPointMake(center.x + cos(startAngle - player.turnArcAngle+0.1)*RADIUS,
-                                                 center.y + sin(startAngle - player.turnArcAngle+0.1)*RADIUS)
+                [self checkCollision:CGPointMake(center.x + cos(startAngle - player.turnArcAngle+TURN_VELOCITY)*RADIUS,
+                                                 center.y + sin(startAngle - player.turnArcAngle+TURN_VELOCITY)*RADIUS)
                  withPlayer:player];
                 
             } else {
@@ -124,8 +129,8 @@
                 CGPathRelease(player.path);
                 player.path = CGPathCreateMutableCopy(player.savedPath);
                 
-                [self checkCollision:CGPointMake(player.loc.x + cos(player.angle)*VELOCITY,
-                                                 player.loc.y + sin(player.angle)*VELOCITY)
+                [self checkCollision:CGPointMake(player.loc.x + cos(player.angle)*(VELOCITY+1),
+                                                 player.loc.y + sin(player.angle)*(VELOCITY+1))
                  withPlayer:player];
             } else {
                 if (player.turnDirectionLastFrame == PlayerTurnDirectionLeft) {
@@ -165,8 +170,19 @@
             player.turnDirectionLastFrame = PlayerTurnDirectionNone;
         }
         
+        
+        // TODO: WTF is going on with my frame?
+        if (!CGRectContainsPoint(CGRectMake(0, 0, 1024, 786), player.loc)) {
+            player.dead = YES;
+        }
+        
         [self setNeedsDisplay];
     }];
+    
+    if (numDeadPlayers == self.players.count) {
+        // lol.
+        exit(0);
+    }
 }
 
 - (void)checkCollision:(CGPoint)point withPlayer:(Player *)controllingPlayer {
@@ -174,37 +190,15 @@
         CGPathRef pathToCheck = (controllingPlayer == player) ? player.savedPath : player.path;
         CGPathRef thing = CGPathCreateCopyByStrokingPath(pathToCheck, NULL, LINE_WIDTH, LINE_CAP, kCGLineJoinRound, 0);
         if (CGPathContainsPoint(thing, NULL, point, NO)) {
-            [self.displayLink invalidate];
+            controllingPlayer.dead = YES;
         }
         CGPathRelease(thing);
     }];
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    CGPoint point = [[touches anyObject] locationInView:self];
-    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-        if (point.x < self.frame.size.width / 2.0f) {
-            player.turnDirection = PlayerTurnDirectionLeft;
-        } else {
-            player.turnDirection = PlayerTurnDirectionRight;
-        }
-    }];
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    CGPoint point = [[touches anyObject] locationInView:self];
-    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-        if (point.x < self.frame.size.width / 2.0f) {
-            player.turnDirection = PlayerTurnDirectionLeft;
-        } else {
-            player.turnDirection = PlayerTurnDirectionRight;
-        }
-    }];
-}
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-        player.turnDirection = PlayerTurnDirectionNone;
-    }];
+- (void)setTurnDirectionForPlayerAtIndex:(NSUInteger)index withDirection:(PlayerTurnDirection)direction {
+    Player *player = [self.players objectAtIndex:index];
+    player.turnDirection = direction;
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -216,7 +210,7 @@
     CGContextSetAllowsAntialiasing(context, NO);
     
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-        CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+        CGContextSetStrokeColorWithColor(context, [player.color CGColor]);
         CGContextAddPath(context, player.path);
         CGContextStrokePath(context);
     }];
