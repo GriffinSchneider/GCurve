@@ -19,11 +19,6 @@
 
 @interface GameView()
 
-@property BOOL turningLeft;
-@property BOOL turningRight;
-
-@property BOOL wasTurningLeftLastFrame;
-@property BOOL wasTurningRightLastFrame;
 
 @property CADisplayLink *displayLink;
 
@@ -37,10 +32,17 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.players = [@[[Player new]] mutableCopy];
+        self.players = [@[[Player new],
+                          [Player new],
+                          [Player new],
+                          [Player new]] mutableCopy];
         
         [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-            player.loc = CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
+            
+            player.loc = CGPointMake(((float)rand() / RAND_MAX) * (frame.size.width - 20) + 40,
+                                     ((float)rand() / RAND_MAX) * (frame.size.height - 20) + 40);
+            
+            
             CGPathMoveToPoint(player.path, NULL, player.loc.x, player.loc.y);
             player.savedPath = CGPathCreateMutableCopy(player.path);
         }];
@@ -58,12 +60,12 @@
 - (void)update:(CADisplayLink *)sender {
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
         
-        if (self.turningLeft) {
+        if (player.turnDirection == PlayerTurnDirectionLeft) {
             CGPoint center = CGPointMake(player.loc.x + cos(player.angle-M_PI_2)*RADIUS,
                                          player.loc.y + sin(player.angle-M_PI_2)*RADIUS);
             CGFloat startAngle = atan2(player.loc.y - center.y,
                                        player.loc.x - center.x);
-            if (self.wasTurningLeftLastFrame) {
+            if (player.turnDirectionLastFrame == PlayerTurnDirectionLeft) {
                 player.turnArcAngle += 0.1;
                 CGPathRelease(player.path);
                 player.path = CGPathCreateMutableCopy(player.savedPath);
@@ -86,15 +88,14 @@
             
             
             
-            self.wasTurningLeftLastFrame = YES;
-            self.wasTurningRightLastFrame = NO;
+            player.turnDirectionLastFrame = PlayerTurnDirectionLeft;
             
-        } else if (self.turningRight) {
+        } else if (player.turnDirection == PlayerTurnDirectionRight) {
             CGPoint center = CGPointMake(player.loc.x + cos(player.angle+M_PI_2)*RADIUS,
                                          player.loc.y + sin(player.angle+M_PI_2)*RADIUS);
             CGFloat startAngle = atan2(player.loc.y - center.y,
                                        player.loc.x - center.x);
-            if (self.wasTurningRightLastFrame) {
+            if (player.turnDirectionLastFrame == PlayerTurnDirectionRight) {
                 player.turnArcAngle -= 0.1;
                 CGPathRelease(player.path);
                 player.path = CGPathCreateMutableCopy(player.savedPath);
@@ -116,14 +117,10 @@
                          startAngle, startAngle - player.turnArcAngle,
                          NO);
             
-            
-            self.wasTurningRightLastFrame = YES;
-            self.wasTurningLeftLastFrame = NO;
+            player.turnDirectionLastFrame = PlayerTurnDirectionRight;
             
         } else {
-            BOOL wasStraightLastFrame = !self.wasTurningLeftLastFrame && !self.wasTurningRightLastFrame;
-            
-            if (wasStraightLastFrame) {
+            if (player.turnDirectionLastFrame == PlayerTurnDirectionNone) {
                 CGPathRelease(player.path);
                 player.path = CGPathCreateMutableCopy(player.savedPath);
                 
@@ -131,7 +128,7 @@
                                                  player.loc.y + sin(player.angle)*VELOCITY)
                  withPlayer:player];
             } else {
-                if (self.wasTurningLeftLastFrame) {
+                if (player.turnDirectionLastFrame == PlayerTurnDirectionLeft) {
                     CGPoint center = CGPointMake(player.loc.x + cos(player.angle-M_PI_2)*RADIUS,
                                                  player.loc.y + sin(player.angle-M_PI_2)*RADIUS);
                     CGFloat startAngle = atan2(player.loc.y - center.y,
@@ -143,7 +140,7 @@
                     
                     player.angle = (startAngle - player.turnArcAngle) - M_PI_2;
                 }
-                if (self.wasTurningRightLastFrame) {
+                if (player.turnDirectionLastFrame == PlayerTurnDirectionRight) {
                     CGPoint center = CGPointMake(player.loc.x + cos(player.angle+M_PI_2)*RADIUS,
                                                  player.loc.y + sin(player.angle+M_PI_2)*RADIUS);
                     CGFloat startAngle = atan2(player.loc.y - center.y,
@@ -165,50 +162,50 @@
             
 
             CGPathAddLineToPoint(player.path, NULL, player.loc.x, player.loc.y);
-            self.wasTurningLeftLastFrame = NO;
-            self.wasTurningRightLastFrame = NO;
+            player.turnDirectionLastFrame = PlayerTurnDirectionNone;
         }
-        
         
         [self setNeedsDisplay];
     }];
 }
 
-- (void)checkCollision:(CGPoint)point withPlayer:(Player *)player {
-    CGPathRef thing = CGPathCreateCopyByStrokingPath(player.savedPath, NULL, LINE_WIDTH, LINE_CAP, kCGLineJoinRound, 0);
-    if (CGPathContainsPoint(thing, NULL, point, NO)) {
-        [self.displayLink invalidate];
-    }
-    CGPathRelease(thing);
+- (void)checkCollision:(CGPoint)point withPlayer:(Player *)controllingPlayer {
+    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
+        CGPathRef pathToCheck = (controllingPlayer == player) ? player.savedPath : player.path;
+        CGPathRef thing = CGPathCreateCopyByStrokingPath(pathToCheck, NULL, LINE_WIDTH, LINE_CAP, kCGLineJoinRound, 0);
+        if (CGPathContainsPoint(thing, NULL, point, NO)) {
+            [self.displayLink invalidate];
+        }
+        CGPathRelease(thing);
+    }];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     CGPoint point = [[touches anyObject] locationInView:self];
-    if (point.x < self.frame.size.width / 2.0f) {
-        self.turningRight = NO;
-        self.turningLeft = YES;
-    } else {
-        self.turningLeft = NO;
-        self.turningRight = YES;
-    }
+    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
+        if (point.x < self.frame.size.width / 2.0f) {
+            player.turnDirection = PlayerTurnDirectionLeft;
+        } else {
+            player.turnDirection = PlayerTurnDirectionRight;
+        }
+    }];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     CGPoint point = [[touches anyObject] locationInView:self];
-    if (point.x < self.frame.size.width / 2.0f) {
-        self.turningRight = NO;
-        self.turningLeft = YES;
-    } else {
-        self.turningLeft = NO;
-        self.turningRight = YES;
-    }
+    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
+        if (point.x < self.frame.size.width / 2.0f) {
+            player.turnDirection = PlayerTurnDirectionLeft;
+        } else {
+            player.turnDirection = PlayerTurnDirectionRight;
+        }
+    }];
 }
-
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    self.turningLeft = NO;
-    self.turningRight = NO;
+    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
+        player.turnDirection = PlayerTurnDirectionNone;
+    }];
 }
-
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();

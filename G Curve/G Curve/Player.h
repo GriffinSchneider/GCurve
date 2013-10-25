@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, PlayerTurnDirection) {
+    PlayerTurnDirectionNone = 0,
+    PlayerTurnDirectionRight,
+    PlayerTurnDirectionLeft,
+};
+
+
 @interface Player : NSObject
 
 @property (nonatomic) CGFloat turnArcAngle;
@@ -17,5 +24,8 @@
 
 @property (nonatomic) CGMutablePathRef path;
 @property (nonatomic) CGMutablePathRef savedPath;
+
+@property (nonatomic) PlayerTurnDirection turnDirection;
+@property (nonatomic) PlayerTurnDirection turnDirectionLastFrame;
 
 @end
