@@ -52,6 +52,10 @@
         player.loc = CGPointMake(player.loc.x + cos(player.angle)*VELOCITY,
                                  player.loc.y + sin(player.angle)*VELOCITY);
         
+        if (CGPathContainsPoint(self.path, NULL, player.loc, NO)) {
+            NSLog(@"WHI");
+        }
+        
         CGPathAddLineToPoint(self.path, NULL, player.loc.x, player.loc.y);
         
         if (self.turningLeft) {
