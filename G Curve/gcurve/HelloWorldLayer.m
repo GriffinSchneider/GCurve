@@ -12,6 +12,7 @@
 #import "Player.h"
 
 #define BACKGROUND_COLOR ccc4(0, 0, 0, 255)
+#define PLAYER_RADIUS 10
 
 @interface HelloWorldLayer()
 
@@ -72,7 +73,7 @@
     
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
         player.loc = CGPointMake(500*(idx + 1), 500*(idx + 1));
-        player.radius = 30;
+        player.radius = PLAYER_RADIUS;
     }];
 }
 
