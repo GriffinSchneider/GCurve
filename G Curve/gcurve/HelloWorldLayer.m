@@ -95,9 +95,12 @@
 
 - (void)update:(ccTime)dt {
     
+    __block BOOL isEveryoneDead = YES;
+    
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
         
         if (!player.dead) {
+            isEveryoneDead = NO;
             [player move:dt];
             
             if ([self drawPlayer:player]) {
@@ -105,6 +108,10 @@
             }
         }
     }];
+    
+    if (isEveryoneDead) {
+        exit(0);
+    }
     
     [self.texture apply];
 }
