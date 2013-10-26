@@ -12,7 +12,7 @@
 #import "Player.h"
 
 #define BACKGROUND_COLOR ccc4(0, 0, 0, 255)
-#define PLAYER_RADIUS 10
+#define PLAYER_RADIUS 8
 
 @interface HelloWorldLayer()
 
@@ -69,10 +69,12 @@
     [self addChild:sprite];
     
     self.players = [@[[Player newWithColor:ccc4(255, 0, 0, 255)],
-                      [Player newWithColor:ccc4(0, 255, 0, 255)]] mutableCopy];
+                      [Player newWithColor:ccc4(0, 255, 0, 255)],
+                      [Player newWithColor:ccc4(100, 100, 255, 255)],
+                      [Player newWithColor:ccc4(0, 255, 255, 255)]] mutableCopy];
     
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-        player.loc = CGPointMake(500*(idx + 1), 500*(idx + 1));
+        player.loc = CGPointMake(250*(idx + 1), 250*(idx + 1));
         player.radius = PLAYER_RADIUS;
     }];
 }

@@ -19,14 +19,14 @@
 - (void)update:(ccTime)dt {
     
     if (self.turnDirection == PlayerTurnDirectionLeft){
-        self.angle -= 0.07;
+        self.angle -= 0.05;
     } else if (self.turnDirection == PlayerTurnDirectionRight) {
-        self.angle += 0.07;
+        self.angle += 0.05;
     }
     
     self.previousLoc = self.loc;
-    self.loc = CGPointMake(self.loc.x + cos(self.angle)*5.0,
-                           self.loc.y + sin(self.angle)*5.0);
+    self.loc = CGPointMake(self.loc.x + cos(self.angle)*3.5,
+                           self.loc.y + sin(self.angle)*3.5);
     
     self.timeSinceLastAutoGap += dt;
     
