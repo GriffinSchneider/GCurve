@@ -185,11 +185,13 @@
             for (int y = minY; y < maxY; y++) {
                 CGPoint point = CGPointMake(x, y);
                 // If this pixel is not in the player's head...
-                if (![self isPixel:point inCircleAtPoint:player.loc withRadius:player.radius]) {
-                    // ...and this pixel is  in the player's head from the previous frame...
-                    if ([self isPixel:point inCircleAtPoint:player.previousLoc withRadius:player.radius]) {
-                        [self.texture setPixelAt:point rgba:BACKGROUND_COLOR];
-                    }
+                if (![self isPixel:point inCircleAtPoint:player.loc withRadius:player.radius] &&
+                    // ...and this pixel is in the player's head from the previous frame...
+                    [self isPixel:point inCircleAtPoint:player.previousLoc withRadius:player.radius] &&
+                    // ...and this pixel was not in the player's head when the gap started...
+                    ![self isPixel:point inCircleAtPoint:player.gapBeginLoc withRadius:player.radius]) {
+                    // ...then clear the pixel.
+                    [self.texture setPixelAt:point rgba:BACKGROUND_COLOR];
                 }
             }
         }

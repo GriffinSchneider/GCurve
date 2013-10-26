@@ -31,14 +31,15 @@
     self.timeSinceLastAutoGap += dt;
     
     if (self.gapState == PlayerGapStateNotGapping) {
-        if (self.timeSinceLastAutoGap > 3.0) {
-            if ((arc4random() % 100) > 98) {
+        if (self.timeSinceLastAutoGap > 2.0) {
+            if ((arc4random() % 1000) > 980) {
+                self.gapBeginLoc = self.previousLoc;
                 self.gapState = PlayerGapStateAutoGapping;
                 self.timeSinceLastAutoGap = 0;
             }
         }
     } else if (self.gapState == PlayerGapStateAutoGapping) {
-        if (self.timeSinceLastAutoGap > 0.4) {
+        if (self.timeSinceLastAutoGap > 0.6) {
             self.gapState = PlayerGapStateNotGapping;
             self.timeSinceLastAutoGap = 0;
         }

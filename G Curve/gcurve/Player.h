@@ -29,14 +29,13 @@ typedef NS_ENUM(NSInteger, PlayerGapState) {
 
 @property (nonatomic) ccTime timeSinceLastAutoGap;
 @property (nonatomic) PlayerGapState gapState;
+@property (nonatomic) CGPoint gapBeginLoc;
 
 @property (nonatomic) CGFloat velocity;
 @property (nonatomic) CGFloat radius;
 @property (nonatomic) CGFloat angle;
 @property (nonatomic) CGPoint loc;
 @property (nonatomic) CGPoint previousLoc;
-
-@property (nonatomic) NSMutableArray *pixelsAddedLastFrame;
 
 @property (nonatomic) ccColor4B color;
 
