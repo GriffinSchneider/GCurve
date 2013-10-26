@@ -101,7 +101,7 @@
         
         if (!player.dead) {
             isEveryoneDead = NO;
-            [player move:dt];
+            [player update:dt];
             
             if ([self drawPlayer:player]) {
                 player.dead = YES;
@@ -140,9 +140,14 @@
     
     BOOL retVal = NO;
     
+    CGFloat minX = player.loc.x-player.radius;
+    CGFloat maxX = player.loc.x+player.radius;
+    CGFloat minY = player.loc.y-player.radius;
+    CGFloat maxY = player.loc.y+player.radius;
+    
     // Iterate over all pixels in the circle's bounding square
-    for (int x = player.loc.x-player.radius; x < player.loc.x + player.radius; x++) {
-        for (int y = player.loc.y-player.radius; y < player.loc.y + player.radius; y++) {
+    for (int x = minX; x < maxX; x++) {
+        for (int y = minY; y < maxY; y++) {
             
             CGPoint point = CGPointMake(x, y);
             
@@ -159,13 +164,37 @@
                         // ...then there was a collision.
                         retVal = YES;
                     }
+                    // Fill in the player's head after collision detection.
+                    [self.texture setPixelAt:point rgba:player.color];
                 }
-                
-                // Fill in the player's head after collision detection.
-                [self.texture setPixelAt:point rgba:player.color];
             }
         }
     }
+    
+    
+    if (player.gapState == PlayerGapStateAutoGapping || player.gapState == PlayerGapStateForcedGapping) {
+        
+        retVal = NO;
+    
+        minX = player.previousLoc.x-player.radius;
+        maxX = player.previousLoc.x+player.radius;
+        minY = player.previousLoc.y-player.radius;
+        maxY = player.previousLoc.y+player.radius;
+        
+        for (int x = minX; x < maxX; x++) {
+            for (int y = minY; y < maxY; y++) {
+                CGPoint point = CGPointMake(x, y);
+                // If this pixel is not in the player's head...
+                if (![self isPixel:point inCircleAtPoint:player.loc withRadius:player.radius]) {
+                    // ...and this pixel is  in the player's head from the previous frame...
+                    if ([self isPixel:point inCircleAtPoint:player.previousLoc withRadius:player.radius]) {
+                        [self.texture setPixelAt:point rgba:BACKGROUND_COLOR];
+                    }
+                }
+            }
+        }
+    }
+    
     return retVal;
 }
 

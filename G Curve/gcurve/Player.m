@@ -16,7 +16,7 @@
     return player;
 }
 
-- (void)move:(ccTime)dt {
+- (void)update:(ccTime)dt {
     
     if (self.turnDirection == PlayerTurnDirectionLeft){
         self.angle -= 0.07;
@@ -27,6 +27,22 @@
     self.previousLoc = self.loc;
     self.loc = CGPointMake(self.loc.x + cos(self.angle)*5.0,
                            self.loc.y + sin(self.angle)*5.0);
+    
+    self.timeSinceLastAutoGap += dt;
+    
+    if (self.gapState == PlayerGapStateNotGapping) {
+        if (self.timeSinceLastAutoGap > 3.0) {
+            if ((arc4random() % 100) > 98) {
+                self.gapState = PlayerGapStateAutoGapping;
+                self.timeSinceLastAutoGap = 0;
+            }
+        }
+    } else if (self.gapState == PlayerGapStateAutoGapping) {
+        if (self.timeSinceLastAutoGap > 0.4) {
+            self.gapState = PlayerGapStateNotGapping;
+            self.timeSinceLastAutoGap = 0;
+        }
+    }
 }
 
 @end

@@ -15,11 +15,20 @@ typedef NS_ENUM(NSInteger, PlayerTurnDirection) {
     PlayerTurnDirectionRight
 };
 
+typedef NS_ENUM(NSInteger, PlayerGapState) {
+    PlayerGapStateNotGapping = 0,
+    PlayerGapStateAutoGapping,
+    PlayerGapStateForcedGapping,
+};
+
 
 @interface Player : NSObject
 
 @property (nonatomic) BOOL dead;
 @property (nonatomic) PlayerTurnDirection turnDirection;
+
+@property (nonatomic) ccTime timeSinceLastAutoGap;
+@property (nonatomic) PlayerGapState gapState;
 
 @property (nonatomic) CGFloat velocity;
 @property (nonatomic) CGFloat radius;
@@ -27,10 +36,12 @@ typedef NS_ENUM(NSInteger, PlayerTurnDirection) {
 @property (nonatomic) CGPoint loc;
 @property (nonatomic) CGPoint previousLoc;
 
+@property (nonatomic) NSMutableArray *pixelsAddedLastFrame;
+
 @property (nonatomic) ccColor4B color;
 
 + (id)newWithColor:(ccColor4B)color;
 
-- (void)move:(ccTime)dt;
+- (void)update:(ccTime)dt;
 
 @end
