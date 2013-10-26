@@ -153,7 +153,7 @@
             
             // If this pixel is in the player's head...
             if ([self isPixel:point inCircleAtPoint:player.loc withRadius:player.radius]) {
-                // ...and this pixel is not in the player's head from the previous frame...
+                // ...and this pixel wasn't in the player's head last frame...
                 if (![self isPixel:point inCircleAtPoint:player.previousLoc withRadius:player.radius]) {
                     ccColor4B color = [self.texture pixelAt:point];
                     // ...and this pixel contains another snake body...
@@ -164,14 +164,16 @@
                         // ...then there was a collision.
                         retVal = YES;
                     }
-                    // Fill in the player's head after collision detection.
-                    [self.texture setPixelAt:point rgba:player.color];
                 }
+                
+                // Fill in the player's head after collision detection.
+                [self.texture setPixelAt:point rgba:player.color];
             }
         }
     }
     
     
+    // If the player is gapping, then erase the trail.
     if (player.gapState == PlayerGapStateAutoGapping || player.gapState == PlayerGapStateForcedGapping) {
         
         retVal = NO;
