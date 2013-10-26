@@ -11,6 +11,8 @@
 #import "CCTexture2DMutable.h"
 #import "Player.h"
 
+#define BACKGROUND_COLOR ccc4(0, 0, 0, 255)
+
 @interface HelloWorldLayer()
 
 @property (nonatomic, strong) CCTexture2DMutable *texture;
@@ -56,7 +58,7 @@
     
     self.texture = [[CCTexture2DMutable alloc] initWithData:data pixelFormat:kCCTexture2DPixelFormat_RGBA8888 pixelsWide:2048 pixelsHigh:1536 contentSize:CGSizeMake(2048, 1536)];
     
-    [self.texture fill:ccc4(0, 0, 0, 255)];
+    [self.texture fill:BACKGROUND_COLOR];
     [self.texture apply];
     
     CCSprite *sprite = [CCSprite spriteWithTexture:self.texture];
@@ -65,43 +67,43 @@
     
     [self addChild:sprite];
     
-    self.players = [@[[Player newWithColor:ccc4(255, 0, 0, 255)]] mutableCopy];
+    self.players = [@[[Player newWithColor:ccc4(255, 0, 0, 255)],
+                      [Player newWithColor:ccc4(0, 255, 0, 255)]] mutableCopy];
     
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-        player.loc = CGPointMake(500, 500);
+        player.loc = CGPointMake(500*(idx + 1), 500*(idx + 1));
+        player.radius = 30;
     }];
 }
 
-static BOOL turningLeft = NO;
-static BOOL turningRight = NO;
 - (BOOL)ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
-    if ([touch locationInView:touch.view].x < (2048 / 2 / 2)) {
-        turningLeft = YES;
-    } else {
-        turningRight = YES;
-    }
+    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
+        if ([touch locationInView:touch.view].x < (2048 / 2 / 2)) {
+            player.turnDirection = PlayerTurnDirectionLeft;
+        } else {
+            player.turnDirection = PlayerTurnDirectionRight;
+        }
+    }];
     return YES;
 }
 
 - (void)ccTouchEnded:(UITouch *)touch withEvent:(UIEvent *)event {
-    turningLeft = NO;
-    turningRight = NO;
+    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
+        player.turnDirection = PlayerTurnDirectionNone;
+    }];
 }
 
 - (void)update:(ccTime)dt {
     
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
         
-        if (turningLeft){
-            player.angle -= 0.07;
-        } else if (turningRight) {
-            player.angle += 0.07;
+        if (!player.dead) {
+            [player move:dt];
+            
+            if ([self drawPlayer:player]) {
+                player.dead = YES;
+            }
         }
-        
-        player.loc = CGPointMake(player.loc.x + cos(player.angle)*5.0,
-                                 player.loc.y + sin(player.angle)*5.0);
-        
-        [self drawCircleAtPoint:player.loc withRadius:10 andColor:player.color];
     }];
     
     [self.texture apply];
@@ -115,18 +117,53 @@ static BOOL turningRight = NO;
     }
 }
 
-- (void)drawCircleAtPoint:(CGPoint)center withRadius:(NSInteger)radius andColor:(ccColor4B)color {
+- (void)drawCircleAtPoint:(CGPoint)center withRadius:(CGFloat)radius andColor:(ccColor4B)color {
     // Iterate over all pixels in the circle's bounding square
     for (int x = center.x-radius; x < center.x + radius; x++) {
         for (int y = center.y-radius; y < center.y + radius; y++) {
             // Color the pixel if it's in the circle
-            if ((x-center.x)*(x-center.x)+(y-center.y)*(y-center.y) <= radius*radius) {
+            if ([self isPixel:CGPointMake(x, y) inCircleAtPoint:center withRadius:radius]) {
                 [self.texture setPixelAt:CGPointMake(x, y) rgba:color];
             }
         }
     }
-    
 }
 
+- (BOOL)drawPlayer:(Player *)player {
+    
+    BOOL retVal = NO;
+    
+    // Iterate over all pixels in the circle's bounding square
+    for (int x = player.loc.x-player.radius; x < player.loc.x + player.radius; x++) {
+        for (int y = player.loc.y-player.radius; y < player.loc.y + player.radius; y++) {
+            
+            CGPoint point = CGPointMake(x, y);
+            
+            // If this pixel is in the player's head...
+            if ([self isPixel:point inCircleAtPoint:player.loc withRadius:player.radius]) {
+                // ...and this pixel is not in the player's head from the previous frame...
+                if (![self isPixel:point inCircleAtPoint:player.previousLoc withRadius:player.radius]) {
+                    ccColor4B color = [self.texture pixelAt:point];
+                    // ...and this pixel contains another snake body...
+                    if ((color.r != BACKGROUND_COLOR.r) ||
+                        (color.g != BACKGROUND_COLOR.g) ||
+                        (color.b != BACKGROUND_COLOR.b) ||
+                        (color.a != BACKGROUND_COLOR.a)) {
+                        // ...then there was a collision.
+                        retVal = YES;
+                    }
+                }
+                
+                // Fill in the player's head after collision detection.
+                [self.texture setPixelAt:point rgba:player.color];
+            }
+        }
+    }
+    return retVal;
+}
+
+- (BOOL)isPixel:(CGPoint)pixel inCircleAtPoint:(CGPoint)center withRadius:(CGFloat)radius {
+    return (pixel.x-center.x)*(pixel.x-center.x)+(pixel.y-center.y)*(pixel.y-center.y) <= radius*radius;
+}
 
 @end
