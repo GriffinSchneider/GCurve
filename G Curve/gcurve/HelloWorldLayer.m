@@ -19,6 +19,9 @@
 @property (nonatomic, strong) CCTexture2DMutable *texture;
 @property (nonatomic, strong) NSMutableArray *players;
 
+@property (nonatomic, strong) NSMutableArray *touches;
+@property (nonatomic, strong) NSMutableArray *buttons;
+
 @end
 
 @implementation HelloWorldLayer
@@ -43,8 +46,10 @@
 
 -(id)init {
 	if((self=[super init])) {
-        [self scheduleUpdate];
+        self.touches = [NSMutableArray array];
+        self.buttons = [NSMutableArray array];
         [self genBackground];
+        [self scheduleUpdate];
 	}
 	return self;
 }
@@ -77,23 +82,74 @@
         player.loc = CGPointMake(250*(idx + 1), 250*(idx + 1));
         player.radius = PLAYER_RADIUS;
     }];
+    
+    CCSprite *buttonSprite;
+    
+    // Bottom left
+    buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
+    buttonSprite.position = CGPointMake(120, 60);
+    buttonSprite.scale = 3.0;
+    [self.buttons addObject:buttonSprite];
+    [self addChild:buttonSprite];
+    
+    buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
+    buttonSprite.position = CGPointMake(60, 60);
+    buttonSprite.scale = 3.0;
+    [self.buttons addObject:buttonSprite];
+    [self addChild:buttonSprite];
+    
+    // Bottom right
+    buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
+    buttonSprite.position = CGPointMake([self boundingBox].size.width - 60, 60);
+    buttonSprite.scale = 3.0;
+    [self.buttons addObject:buttonSprite];
+    [self addChild:buttonSprite];
+    
+    buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
+    buttonSprite.position = CGPointMake([self boundingBox].size.width - 120, 60);
+    buttonSprite.scale = 3.0;
+    [self.buttons addObject:buttonSprite];
+    [self addChild:buttonSprite];
+    
+    // Top Right
+    buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
+    buttonSprite.position = CGPointMake([self boundingBox].size.width - 120,
+                                        [self boundingBox].size.height - 60);
+    buttonSprite.scale = 3.0;
+    [self.buttons addObject:buttonSprite];
+    [self addChild:buttonSprite];
+    
+    buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
+    buttonSprite.position = CGPointMake([self boundingBox].size.width - 60,
+                                        [self boundingBox].size.height - 60);
+    buttonSprite.scale = 3.0;
+    [self.buttons addObject:buttonSprite];
+    [self addChild:buttonSprite];
+    
+    // Top left
+    buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
+    buttonSprite.position = CGPointMake(60,
+                                        [self boundingBox].size.height - 60);
+    buttonSprite.scale = 3.0;
+    [self.buttons addObject:buttonSprite];
+    [self addChild:buttonSprite];
+    
+    buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
+    buttonSprite.position = CGPointMake(120,
+                                        [self boundingBox].size.height - 60);
+    buttonSprite.scale = 3.0;
+    [self.buttons addObject:buttonSprite];
+    [self addChild:buttonSprite];
+    
 }
 
 - (BOOL)ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
-    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-        if ([touch locationInView:touch.view].x < (2048 / 2 / 2)) {
-            player.turnDirection = PlayerTurnDirectionLeft;
-        } else {
-            player.turnDirection = PlayerTurnDirectionRight;
-        }
-    }];
+    [self.touches addObject:touch];
     return YES;
 }
 
 - (void)ccTouchEnded:(UITouch *)touch withEvent:(UIEvent *)event {
-    [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-        player.turnDirection = PlayerTurnDirectionNone;
-    }];
+    [self.touches removeObject:touch];
 }
 
 - (void)update:(ccTime)dt {
@@ -110,6 +166,8 @@
                 player.dead = YES;
             }
         }
+        
+        player.turnDirection = PlayerTurnDirectionNone;
     }];
     
     if (isEveryoneDead) {
@@ -117,6 +175,16 @@
     }
     
     [self.texture apply];
+    
+    for (UITouch *touch in self.touches) {
+        CGPoint location = [touch locationInView:touch.view];
+        CGPoint convertedLocation = [[CCDirector sharedDirector] convertToGL:location];
+        [self.buttons enumerateObjectsUsingBlock:^(CCSprite *button, NSUInteger idx, BOOL *stop) {
+            if (CGRectContainsPoint([button boundingBox], convertedLocation)) {
+                [[self.players objectAtIndex:idx / 2] setTurnDirection:(idx%2 > 0) ? PlayerTurnDirectionLeft : PlayerTurnDirectionRight];
+            }
+        }];
+    }
 }
 
 - (void)drawSquareAtPoint:(CGPoint)topLeft withSize:(CGSize)size andColor:(ccColor4B)color {
