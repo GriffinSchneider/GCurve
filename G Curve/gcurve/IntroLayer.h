@@ -9,11 +9,12 @@
 
 // When you import this file, you import all the cocos2d classes
 #import "cocos2d.h"
+#import "GCHelper.h"
 
 // HelloWorldLayer
-@interface IntroLayer : CCLayer
-{
-}
+@interface IntroLayer : CCLayer <
+GCHelperDelegate
+>
 
 // returns a CCScene that contains the HelloWorldLayer as the only child
 +(CCScene *) scene;

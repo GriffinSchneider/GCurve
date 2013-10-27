@@ -10,6 +10,7 @@
 // Import the interfaces
 #import "IntroLayer.h"
 #import "HelloWorldLayer.h"
+#import "AppDelegate.h"
 
 
 #pragma mark - IntroLayer
@@ -18,8 +19,7 @@
 @implementation IntroLayer
 
 // Helper class method that creates a Scene with the HelloWorldLayer as the only child.
-+(CCScene *) scene
-{
++(CCScene *) scene {
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
 	
@@ -54,12 +54,32 @@
 	// add the label as a child to this Layer
 	[self addChild: background];
     
-	// In one second transition to the new scene
-	[self scheduleOnce:@selector(makeTransition:) delay:0.1];
+    [GCHelper sharedInstance].delegate = self;
+    [[GCHelper sharedInstance] authenticateLocalUser];
 }
 
--(void) makeTransition:(ccTime)dt
-{
-	[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.5 scene:[HelloWorldLayer scene] withColor:ccBLACK]];
+-(void) makeTransition {
+    CCScene *newScene = [HelloWorldLayer scene];
+	[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.5 scene:newScene withColor:ccBLACK]];
 }
+
+
+- (void)userAuthenticated {
+    AppController *appDelegate = (AppController *)[UIApplication sharedApplication].delegate;
+    [[GCHelper sharedInstance] findMatchWithMinPlayers:2 maxPlayers:2 viewController:appDelegate.navController delegate:self];
+}
+
+- (void)matchStarted {
+    [self makeTransition];
+    CCLOG(@"Match started");
+}
+
+- (void)matchEnded {
+    CCLOG(@"Match ended");
+}
+
+- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
+    
+}
+
 @end

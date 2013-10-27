@@ -43,6 +43,7 @@
         if (self.timeSinceLastAutoGap > 0.6) {
             self.gapState = PlayerGapStateNotGapping;
             self.timeSinceLastAutoGap = 0;
+            self.radius += 2;
         }
     }
 }

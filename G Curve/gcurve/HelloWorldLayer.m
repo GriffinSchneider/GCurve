@@ -22,6 +22,10 @@
 @property (nonatomic, strong) NSMutableArray *touches;
 @property (nonatomic, strong) NSMutableArray *buttons;
 
+@property (nonatomic) void* textureData;
+
+@property (nonatomic, strong) CCScene *scene;
+
 @end
 
 @implementation HelloWorldLayer
@@ -33,6 +37,7 @@
 	
 	// 'layer' is an autorelease object.
 	HelloWorldLayer *layer = [HelloWorldLayer node];
+    layer.scene = scene;
     layer.isTouchEnabled = YES;
     
 	// add layer as a child to scene
@@ -42,25 +47,38 @@
 	return scene;
 }
 
+- (void)restart {
+	HelloWorldLayer *layer = [HelloWorldLayer node];
+    layer.scene = self.scene;
+    layer.isTouchEnabled = YES;
+    
+    [self.scene removeChild:self cleanup:YES];
+    [self.scene addChild:layer];
+}
+
 -(id)init {
 	if((self=[super init])) {
         self.touches = [NSMutableArray array];
         self.buttons = [NSMutableArray array];
-        [self genBackground];
+        
+        [GCHelper sharedInstance].delegate = self;
         [self scheduleUpdate];
+        
+        [self genBackground];
 	}
 	return self;
 }
 
 - (void)dealloc {
-	[super dealloc];
+    NSLog(@"DEALLOC");
+    free(self.textureData);
 }
 
 - (void)genBackground {
     
-    void * data = malloc(2048 * 1536 * 8);
+    self.textureData = malloc(2048 * 1536 * 8);
     
-    self.texture = [[CCTexture2DMutable alloc] initWithData:data pixelFormat:kCCTexture2DPixelFormat_RGBA8888 pixelsWide:2048 pixelsHigh:1536 contentSize:CGSizeMake(2048, 1536)];
+    self.texture = [[CCTexture2DMutable alloc] initWithData:self.textureData pixelFormat:kCCTexture2DPixelFormat_RGBA8888 pixelsWide:2048 pixelsHigh:1536 contentSize:CGSizeMake(2048, 1536)];
     
     [self.texture fill:BACKGROUND_COLOR];
     [self.texture apply];
@@ -74,7 +92,8 @@
     self.players = [@[[Player newWithColor:ccc4(255, 0, 0, 255)],
                       [Player newWithColor:ccc4(0, 255, 0, 255)],
                       [Player newWithColor:ccc4(100, 100, 255, 255)],
-                      [Player newWithColor:ccc4(0, 255, 255, 255)]] mutableCopy];
+                      [Player newWithColor:ccc4(0, 255, 255, 255)],
+                      [Player newWithColor:ccc4(255, 255, 255, 255)]] mutableCopy];
     
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
         player.loc = CGPointMake(250*(idx + 1), 250*(idx + 1));
@@ -139,16 +158,24 @@
     [self.buttons addObject:buttonSprite];
     [self addChild:buttonSprite];
     
+    
 }
 
 - (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [touches enumerateObjectsUsingBlock:^(UITouch *touch, BOOL *stop) {
+        
         [self.touches addObject:touch];
-        NSLog(@"BEGAN\n%@\n", self.touches);
+        
+        if ([touch locationInView:touch.view].x < (300)) {
+            [[GCHelper sharedInstance].match sendData:[@"left" dataUsingEncoding:NSUTF8StringEncoding] toPlayers:[GCHelper sharedInstance].match.playerIDs withDataMode:GKMatchSendDataUnreliable error:nil];
+        } else {
+            [[GCHelper sharedInstance].match sendData:[@"right" dataUsingEncoding:NSUTF8StringEncoding] toPlayers:[GCHelper sharedInstance].match.playerIDs withDataMode:GKMatchSendDataUnreliable error:nil];
+        }
     }];
 }
 
 - (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    [[GCHelper sharedInstance].match sendData:[@"none" dataUsingEncoding:NSUTF8StringEncoding] toPlayers:[GCHelper sharedInstance].match.playerIDs withDataMode:GKMatchSendDataUnreliable error:nil];
     [touches enumerateObjectsUsingBlock:^(UITouch *touch, BOOL *stop) {
         [self.touches removeObject:touch];
     }];
@@ -169,15 +196,16 @@
             }
         }
         
-        player.turnDirection = PlayerTurnDirectionNone;
+        if (idx != 4) {
+            player.turnDirection = PlayerTurnDirectionNone;
+        }
     }];
     
     if (isEveryoneDead) {
-        exit(0);
+       [self restart];
     }
     
     [self.texture apply];
-    
     
     for (UITouch *touch in self.touches) {
         CGPoint location = [touch locationInView:touch.view];
@@ -279,5 +307,18 @@
 - (BOOL)isPixel:(CGPoint)pixel inCircleAtPoint:(CGPoint)center withRadius:(CGFloat)radius {
     return (pixel.x-center.x)*(pixel.x-center.x)+(pixel.y-center.y)*(pixel.y-center.y) <= radius*radius;
 }
+
+- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
+    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    CCLOG(@"Received data: %@", string);
+    if ([string isEqualToString:@"left"]) {
+        [[self.players objectAtIndex:4] setTurnDirection:PlayerTurnDirectionLeft];
+    } else if ([string isEqualToString:@"right"]) {
+        [[self.players objectAtIndex:4] setTurnDirection:PlayerTurnDirectionRight];
+    } else {
+        [[self.players objectAtIndex:4] setTurnDirection:PlayerTurnDirectionNone];
+    }
+}
+
 
 @end
