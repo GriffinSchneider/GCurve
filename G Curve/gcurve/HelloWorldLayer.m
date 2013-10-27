@@ -33,10 +33,8 @@
 	
 	// 'layer' is an autorelease object.
 	HelloWorldLayer *layer = [HelloWorldLayer node];
+    layer.isTouchEnabled = YES;
     
-	CCDirector *director = [CCDirector sharedDirector];
-	[[director touchDispatcher] addTargetedDelegate:layer priority:0 swallowsTouches:YES];
-	
 	// add layer as a child to scene
 	[scene addChild:layer];
 	
@@ -143,13 +141,17 @@
     
 }
 
-- (BOOL)ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
-    [self.touches addObject:touch];
-    return YES;
+- (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [touches enumerateObjectsUsingBlock:^(UITouch *touch, BOOL *stop) {
+        [self.touches addObject:touch];
+        NSLog(@"BEGAN\n%@\n", self.touches);
+    }];
 }
 
-- (void)ccTouchEnded:(UITouch *)touch withEvent:(UIEvent *)event {
-    [self.touches removeObject:touch];
+- (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    [touches enumerateObjectsUsingBlock:^(UITouch *touch, BOOL *stop) {
+        [self.touches removeObject:touch];
+    }];
 }
 
 - (void)update:(ccTime)dt {
@@ -175,6 +177,7 @@
     }
     
     [self.texture apply];
+    
     
     for (UITouch *touch in self.touches) {
         CGPoint location = [touch locationInView:touch.view];
@@ -225,7 +228,7 @@
             // If this pixel is in the player's head...
             if ([self isPixel:point inCircleAtPoint:player.loc withRadius:player.radius]) {
                 // ...and this pixel wasn't in the player's head last frame...
-                if (![self isPixel:point inCircleAtPoint:player.previousLoc withRadius:player.radius]) {
+                if (![self isPixel:point inCircleAtPoint:player.previousLoc withRadius:player.previousRadius]) {
                     ccColor4B color = [self.texture pixelAt:point];
                     // ...and this pixel contains another snake body...
                     if ((color.r != BACKGROUND_COLOR.r) ||
@@ -249,10 +252,10 @@
         
         retVal = NO;
     
-        minX = player.previousLoc.x-player.radius;
-        maxX = player.previousLoc.x+player.radius;
-        minY = player.previousLoc.y-player.radius;
-        maxY = player.previousLoc.y+player.radius;
+        minX = player.previousLoc.x-player.previousRadius;
+        maxX = player.previousLoc.x+player.previousRadius;
+        minY = player.previousLoc.y-player.previousRadius;
+        maxY = player.previousLoc.y+player.previousRadius;
         
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
@@ -260,7 +263,7 @@
                 // If this pixel is not in the player's head...
                 if (![self isPixel:point inCircleAtPoint:player.loc withRadius:player.radius] &&
                     // ...and this pixel is in the player's head from the previous frame...
-                    [self isPixel:point inCircleAtPoint:player.previousLoc withRadius:player.radius] &&
+                    [self isPixel:point inCircleAtPoint:player.previousLoc withRadius:player.previousRadius] &&
                     // ...and this pixel was not in the player's head when the gap started...
                     ![self isPixel:point inCircleAtPoint:player.gapBeginLoc withRadius:player.radius]) {
                     // ...then clear the pixel.

@@ -32,8 +32,11 @@ typedef NS_ENUM(NSInteger, PlayerGapState) {
 @property (nonatomic) CGPoint gapBeginLoc;
 
 @property (nonatomic) CGFloat velocity;
-@property (nonatomic) CGFloat radius;
 @property (nonatomic) CGFloat angle;
+
+@property (nonatomic) CGFloat radius;
+@property (nonatomic) CGFloat previousRadius;
+
 @property (nonatomic) CGPoint loc;
 @property (nonatomic) CGPoint previousLoc;
 

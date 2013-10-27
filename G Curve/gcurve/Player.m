@@ -25,6 +25,7 @@
     }
     
     self.previousLoc = self.loc;
+    self.previousRadius = self.radius;
     self.loc = CGPointMake(self.loc.x + cos(self.angle)*3.5,
                            self.loc.y + sin(self.angle)*3.5);
     
