@@ -14,4 +14,8 @@
     return ( UIInterfaceOrientationIsLandscape( interfaceOrientation ) );
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskLandscape;
+}
+
 @end

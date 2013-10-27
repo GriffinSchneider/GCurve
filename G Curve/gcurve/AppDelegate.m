@@ -77,7 +77,6 @@
 	// and add the scene to the stack. The director will run it when it automatically when the view is displayed.
 	[director_ pushScene: [IntroLayer scene]]; 
 
-	
 	// Create a Navigation Controller with the Director
 	navController_ = [[UINavigationController alloc] initWithRootViewController:director_];
 	navController_.navigationBarHidden = YES;
@@ -93,11 +92,13 @@
 }
 
 // Supported orientations: Landscape. Customize it for your own needs
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
+- (NSUInteger)application:(UIApplication*)application supportedInterfaceOrientationsForWindow:(UIWindow*)window {
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
 
 // getting a call, pause the game
 -(void) applicationWillResignActive:(UIApplication *)application

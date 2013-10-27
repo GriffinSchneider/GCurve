@@ -34,28 +34,22 @@
 }
 
 // 
--(void) onEnter
-{
+-(void) onEnter {
 	[super onEnter];
 
 	// ask director for the window size
 	CGSize size = [[CCDirector sharedDirector] winSize];
 
-	CCSprite *background;
-	
-	if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ) {
-		background = [CCSprite spriteWithFile:@"Default.png"];
-		background.rotation = 90;
-	} else {
-		background = [CCSprite spriteWithFile:@"Default-Landscape~ipad.png"];
-	}
-	background.position = ccp(size.width/2, size.height/2);
-
-	// add the label as a child to this Layer
-	[self addChild: background];
-    
     [GCHelper sharedInstance].delegate = self;
     [[GCHelper sharedInstance] authenticateLocalUser];
+    
+    CCMenuItem *menuItem1 = [CCMenuItemFont itemWithString:@"Local Multiplayer" target:self selector:@selector(localMultiplayerPressed:)];
+    CCMenuItem *menuItem2 = [CCMenuItemFont itemWithString:@"Gamecenter Matchmaking" target:self selector:@selector(gameCenterMatchmakingPressed:)];
+    
+    CCMenu *menu = [CCMenu menuWithArray:@[menuItem1, menuItem2]];
+    [menu alignItemsVerticallyWithPadding:10];
+    menu.position = CGPointMake(size.width/2, size.height/2);
+    [self addChild:menu];
 }
 
 -(void) makeTransition {
@@ -63,19 +57,24 @@
 	[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.5 scene:newScene withColor:ccBLACK]];
 }
 
+- (void)localMultiplayerPressed:(CCMenuItem *)sender {
+    [self makeTransition];
+}
 
-- (void)userAuthenticated {
+- (void)gameCenterMatchmakingPressed:(CCMenuItem *)sender {
     AppController *appDelegate = (AppController *)[UIApplication sharedApplication].delegate;
     [[GCHelper sharedInstance] findMatchWithMinPlayers:2 maxPlayers:2 viewController:appDelegate.navController delegate:self];
 }
 
+- (void)userAuthenticated {
+}
+
 - (void)matchStarted {
-    [self makeTransition];
     CCLOG(@"Match started");
+    [self makeTransition];
 }
 
 - (void)matchEnded {
-    CCLOG(@"Match ended");
 }
 
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
