@@ -47,7 +47,7 @@
     CCMenuItem *menuItem2 = [CCMenuItemFont itemWithString:@"Gamecenter Matchmaking" target:self selector:@selector(gameCenterMatchmakingPressed:)];
     
     CCMenu *menu = [CCMenu menuWithArray:@[menuItem1, menuItem2]];
-    [menu alignItemsVerticallyWithPadding:10];
+    [menu alignItemsVerticallyWithPadding:20];
     menu.position = CGPointMake(size.width/2, size.height/2);
     [self addChild:menu];
 }

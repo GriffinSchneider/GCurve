@@ -27,6 +27,8 @@ typedef NS_ENUM(NSInteger, PlayerGapState) {
 @property (nonatomic) BOOL dead;
 @property (nonatomic) PlayerTurnDirection turnDirection;
 
+@property (nonatomic) BOOL hasTemporaryCollisionImmunity;
+
 @property (nonatomic) ccTime timeSinceLastAutoGap;
 @property (nonatomic) PlayerGapState gapState;
 @property (nonatomic) CGPoint gapBeginLoc;

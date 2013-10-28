@@ -139,6 +139,7 @@
 		85432841181CDA87003A9C5C /* IntroLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 851F9CF9181C39A500BDFC5A /* IntroLayer.m */; };
 		85432842181CDA8B003A9C5C /* HelloWorldLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 851F9CF6181C39A500BDFC5A /* HelloWorldLayer.m */; };
 		85432843181CDA8E003A9C5C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 851F9CF3181C39A500BDFC5A /* AppDelegate.m */; };
+		85432846181E06C3003A9C5C /* Powerup.m in Sources */ = {isa = PBXBuildFile; fileRef = 85432845181E06C3003A9C5C /* Powerup.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -414,6 +415,8 @@
 		8543283B181CC97C003A9C5C /* GCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCHelper.m; sourceTree = "<group>"; };
 		8543283C181CC97C003A9C5C /* GKMatchmakerViewController-LandscapeOnly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GKMatchmakerViewController-LandscapeOnly.h"; sourceTree = "<group>"; };
 		8543283D181CC97C003A9C5C /* GKMatchmakerViewController-LandscapeOnly.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GKMatchmakerViewController-LandscapeOnly.m"; sourceTree = "<group>"; };
+		85432844181E06C3003A9C5C /* Powerup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Powerup.h; sourceTree = "<group>"; };
+		85432845181E06C3003A9C5C /* Powerup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Powerup.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -480,6 +483,8 @@
 				851F9CF9181C39A500BDFC5A /* IntroLayer.m */,
 				851F9D03181C6A1E00BDFC5A /* Player.h */,
 				851F9D04181C6A1E00BDFC5A /* Player.m */,
+				85432844181E06C3003A9C5C /* Powerup.h */,
+				85432845181E06C3003A9C5C /* Powerup.m */,
 				851F9B7B181C39A400BDFC5A /* Resources */,
 				851F9B95181C39A400BDFC5A /* libs */,
 				851F9CEE181C39A500BDFC5A /* Supporting Files */,
@@ -1021,6 +1026,7 @@
 				8543283E181CC97C003A9C5C /* GCHelper.m in Sources */,
 				851F9C2D181C39A500BDFC5A /* ccShaders.m in Sources */,
 				851F9BF5181C39A400BDFC5A /* CCMenuItem.m in Sources */,
+				85432846181E06C3003A9C5C /* Powerup.m in Sources */,
 				851F9C45181C39A500BDFC5A /* CCTexturePVR.m in Sources */,
 				851F9CE6181C39A500BDFC5A /* utility.c in Sources */,
 				851F9C57181C39A500BDFC5A /* CCTransition.m in Sources */,

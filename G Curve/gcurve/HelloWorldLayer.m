@@ -8,30 +8,23 @@
 
 #import "HelloWorldLayer.h"
 #import "AppDelegate.h"
-#import "CCTexture2DMutable.h"
 #import "Player.h"
+#import "Powerup.h"
+#import <objc/runtime.h>
 
 #define BACKGROUND_COLOR ccc4(0, 0, 0, 255)
 #define PLAYER_RADIUS 8
 
-@interface HelloWorldLayer()
+@interface HelloWorldLayer ()
 
-@property (nonatomic, strong) CCTexture2DMutable *texture;
-@property (nonatomic, strong) NSMutableArray *players;
-
-@property (nonatomic, strong) NSMutableArray *touches;
-@property (nonatomic, strong) NSMutableArray *buttons;
-
-@property (nonatomic) void* textureData;
-
-@property (nonatomic, strong) CCScene *scene;
+@property (nonatomic, strong) NSMutableArray *blocksToDo;
 
 @end
 
 @implementation HelloWorldLayer
 
 // Helper class method that creates a Scene with the HelloWorldLayer as the only child.
-+(CCScene *)scene {
++ (CCScene *)scene {
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
 	
@@ -95,6 +88,8 @@
                       [Player newWithColor:ccc4(0, 255, 255, 255)],
                       [Player newWithColor:ccc4(255, 255, 255, 255)]] mutableCopy];
     
+    self.powerups = [NSMutableArray array];
+    
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
         player.loc = CGPointMake(250*(idx + 1), 250*(idx + 1));
         player.radius = PLAYER_RADIUS;
@@ -104,7 +99,7 @@
     
     // Bottom left
     buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
-    buttonSprite.position = CGPointMake(120, 60);
+    buttonSprite.position = CGPointMake(150, 60);
     buttonSprite.scale = 3.0;
     [self.buttons addObject:buttonSprite];
     [self addChild:buttonSprite];
@@ -123,14 +118,14 @@
     [self addChild:buttonSprite];
     
     buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
-    buttonSprite.position = CGPointMake([self boundingBox].size.width - 120, 60);
+    buttonSprite.position = CGPointMake([self boundingBox].size.width - 150, 60);
     buttonSprite.scale = 3.0;
     [self.buttons addObject:buttonSprite];
     [self addChild:buttonSprite];
     
     // Top Right
     buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
-    buttonSprite.position = CGPointMake([self boundingBox].size.width - 120,
+    buttonSprite.position = CGPointMake([self boundingBox].size.width - 150,
                                         [self boundingBox].size.height - 60);
     buttonSprite.scale = 3.0;
     [self.buttons addObject:buttonSprite];
@@ -152,7 +147,7 @@
     [self addChild:buttonSprite];
     
     buttonSprite = [CCSprite spriteWithFile:@"ButtonStar.png"];
-    buttonSprite.position = CGPointMake(120,
+    buttonSprite.position = CGPointMake(150,
                                         [self boundingBox].size.height - 60);
     buttonSprite.scale = 3.0;
     [self.buttons addObject:buttonSprite];
@@ -183,17 +178,39 @@
 
 - (void)update:(ccTime)dt {
     
+    self.timeSinceLastRandomPowerup += dt;
+    if (self.timeSinceLastRandomPowerup > 3) {
+        self.timeSinceLastRandomPowerup = 0;
+        Powerup *powerup = [Powerup newRandomPowerupInSize:[self boundingBox].size];
+        [self addChild:powerup];
+        [self.powerups addObject:powerup];
+    }
+    
     __block BOOL isEveryoneDead = YES;
     
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-        
         if (!player.dead) {
             isEveryoneDead = NO;
             [player update:dt];
             
             if ([self drawPlayer:player]) {
-                player.dead = YES;
+                if (!player.hasTemporaryCollisionImmunity) {
+                    player.dead = YES;
+                }
+            } else {
+                player.hasTemporaryCollisionImmunity = NO;
             }
+            
+            [self.powerups enumerateObjectsUsingBlock:^(Powerup *powerup, NSUInteger idx, BOOL *stop) {
+                if ([self isPixel:player.loc
+                  inCircleAtPoint:ccp(powerup.position.x * CC_CONTENT_SCALE_FACTOR(),
+                                      ([self boundingBox].size.height-powerup.position.y) * CC_CONTENT_SCALE_FACTOR())
+                       withRadius:player.radius + ((powerup.boundingBox.size.width / 2.0f) * CC_CONTENT_SCALE_FACTOR())]) {
+                    [powerup applyToGame:self withOwner:player];
+                    [self.powerups removeObject:powerup];
+                    [powerup removeFromParentAndCleanup:YES];
+                }
+            }];
         }
         
         if (idx != 4) {
@@ -308,6 +325,12 @@
     return (pixel.x-center.x)*(pixel.x-center.x)+(pixel.y-center.y)*(pixel.y-center.y) <= radius*radius;
 }
 
+- (void)userAuthenticated {
+}
+- (void)matchStarted {
+}
+- (void)matchEnded {
+}
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     CCLOG(@"Received data: %@", string);
@@ -319,6 +342,5 @@
         [[self.players objectAtIndex:4] setTurnDirection:PlayerTurnDirectionNone];
     }
 }
-
 
 @end
