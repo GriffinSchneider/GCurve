@@ -91,8 +91,16 @@
     self.powerups = [NSMutableArray array];
     
     [self.players enumerateObjectsUsingBlock:^(Player *player, NSUInteger idx, BOOL *stop) {
-        player.loc = CGPointMake(250*(idx + 1), 250*(idx + 1));
+        player.loc = CGPointMake(400 + arc4random() % (int)(self.boundingBox.size.width-400)*CC_CONTENT_SCALE_FACTOR(),
+                                 400 + arc4random() % (int)(self.boundingBox.size.height-400)*CC_CONTENT_SCALE_FACTOR());
+        player.angle = ((arc4random() % 1000)/1000.0) * M_PI * 2;
         player.radius = PLAYER_RADIUS;
+        player.gapState = PlayerGapStateForcedGapping;
+        double delayInSeconds = 2.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            player.gapState = PlayerGapStateNotGapping;
+        });
     }];
     
     CCSprite *buttonSprite;
